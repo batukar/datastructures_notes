@@ -132,6 +132,21 @@ void birlesim(int dizi[], int sol, int orta, int sag){
     int sol_dizi[sol_boyut];
     int sag_dizi[sag_boyut];
 
-    for(int i=0; i < sol_boyut;);
+    for(int i=0; i < sol_boyut; i++){
+        sol_dizi[i] = dizi[sol+i];  // Sol gecici diziyi doldur
+    }
+    for(int i=0; i < sag_boyut; i++){
+        sag_dizi[i] = dizi[orta + 1 + i]; // Sag gecici diziyi doldur
+    }
+
+    /*  Dizi birlestirme islemi. 
+        Sol dizinin x. index degeri < Sag dizinin y. index degeri ise sol dizinin elemanini diziye ekle. 
+        Degilse sag dizinin elemanini diziye ekle
+    */ 
+
+    int x=0, y=0, f=sol;
+
+
+
 }
 // --------------------------------------- BIRLESTIRME SIRALAMA ALGORIMASI ---------------------------------------------
