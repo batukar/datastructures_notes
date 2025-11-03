@@ -29,11 +29,19 @@ int main(){
    // printf("Merak etme, ödevler gayet basit.\nKendine güven ve bunu tamamla!\n");
 
     int dizi[1000];
+    int dizi2[1000];
+    int dizi3[1000];
 
     srand(time(NULL)); // ayni sayilarin gelmesini onler
     // Diziye 1 - 10.000 arasi random sayilar ata.
     for(int a = 0; a < 1000; a++){
         dizi[a] = rand() % 10000 + 1;
+    }
+    for(int a = 0; a < 1000; a++){
+        dizi2[a] = rand() % 10000 + 1;
+    }
+    for(int a = 0; a < 1000; a++){
+        dizi3[a] = rand() % 10000 + 1;
     }
     // Diziyi ekrana yazdir
     printf("1000 Elemanli dizi: \n\n");
@@ -49,6 +57,7 @@ int main(){
     Umarim kabul edersiniz 
     */
     LARGE_INTEGER start, end, freq;
+
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&start);
 
@@ -56,13 +65,31 @@ int main(){
 
     QueryPerformanceCounter(&end);
 
-    double qS_time = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart;
+    double qS_time = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart; // quick sort hizi
  
     printf("\n\nHizli Siralama algoritmasi ile siralanmis dizi: \n\n");
     for(int a = 0; a < 1000; a++){
         printf("%d, ", dizi[a]);
     }
     printf("\n\nAlgoritma calisma hizi: %.8f saniye", qS_time);
+
+
+
+    
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&start);
+
+    mergeSort(dizi2, 0, 999);
+
+    QueryPerformanceCounter(&end);
+
+    double mS_time = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart;
+
+    printf("\n\n\n Birlestirme Algoritmasi ile siralanmis dizi: \n\n");
+    for(int a=0; a < 1000; a++){
+        printf("%d, ", dizi[a]);
+    }
+    printf("\n\nBirlestirme Algoritamsi calisma hizi: %.8f saniye", mS_time);
 
     return 0;
 }
@@ -121,12 +148,12 @@ void mergeSort(int dizi[], int sol, int sag){
         int orta = sol + ((sag - sol) / 2); // Ortayi hesaplama
         mergeSort(dizi, sol, orta);         // Sol yarim diziyi siralar
         mergeSort(dizi, orta + 1, sag);     // Sag yarim diziyi siralar
-        merge(dizi, sol, orta, sag);        // Dizileri birlestirir
+        birlesim(dizi, sol, orta, sag);        // Dizileri birlestirir
     }
 }
 
 void birlesim(int dizi[], int sol, int orta, int sag){
-    int sol_boyut = orta - (sol + 1);  // Sol yarim dizinin boyutu
+    int sol_boyut = orta - sol + 1;  // Sol yarim dizinin boyutu
     int sag_boyut = sag - orta;        // Sag yarim dizinin boyutu
 
     int sol_dizi[sol_boyut];
@@ -145,6 +172,31 @@ void birlesim(int dizi[], int sol, int orta, int sag){
     */ 
 
     int x=0, y=0, f=sol;
+
+    while(x < sol_boyut && y < sag_boyut){
+        if(sol_dizi[x] <= sag_dizi[y]){
+            dizi[f] = sol_dizi[x];
+            x++;
+        }
+        else{
+            dizi[f] = sag_dizi[y];
+            y++;
+        }
+        f++;
+
+    }
+
+    while(x < sol_boyut){       // Eger sag dizi sona ulasirsa sol dizide kalan elemanlari ekler
+        dizi[f] = sol_dizi[x];
+        x++;
+        f++;
+    }
+
+    while(y < sag_boyut){       // Eger sol dizi sona ulasirsa sag dizide kalan elemanlari ekler
+        dizi[f] = sag_dizi[y];
+        y++;
+        f++;
+    }
 
 
 
