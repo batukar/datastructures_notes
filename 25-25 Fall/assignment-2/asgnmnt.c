@@ -22,6 +22,8 @@ void mergeSort(int dizi[], int sol, int sag);
 void birlesim(int dizi[], int sol, int orta, int sag);
 
 
+// Insertion Sort
+void insertionSort(int dizi[], int boyut);
 
 
 
@@ -90,6 +92,43 @@ int main(){
         printf("%d, ", dizi[a]);
     }
     printf("\n\nBirlestirme Algoritamsi calisma hizi: %.8f saniye", mS_time);
+
+
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&start);
+
+    insertionSort(dizi3, 999);
+    QueryPerformanceCounter(&end);
+
+    double iS_time = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart;
+    printf("\n\nEkleme Siralama algoritmasi ile siralanmis dizi: \n\n");
+    for(int a=0; a<1000; a++){
+        printf("%d, ", dizi3[a]);
+    }
+    printf("\n\nAlgoritma calismahizi : %8f saniye", iS_time);
+
+    printf("\n\nHizli Siralama algoritmasi calisma hizi: %.8f saniye", qS_time);
+    printf("\n\nBirlesim Siralama algoritmasi calisma hizi: %.8f saniye", mS_time);
+    printf("\n\nEkleme Siralama algoritmasi calisma hizi: %.8f saniye", iS_time);
+
+    if(qS_time < mS_time && qS_time < iS_time){
+        printf("\n\n1. Hizli Siralama algoritmasi, %.8f saniye", qS_time);
+
+        if(mS_time < iS_time) printf("\n2. Birlesim Siralama algoritmasi, %.8f saniye\n3. Ekleme Siralama algoritmasi, %.8f saniye", mS_time, iS_time);
+        else printf("\n2. Ekleme Siralama algoritmasi, %.8f saniye\n3.Birlesim Siralama algoritmasi, %.8f saniye", iS_time, mS_time);  
+    }
+    if(mS_time < qS_time && mS_time < iS_time){
+        printf("\n\n1. Birlesim Siralama algoritmasi, %.8f saniye", mS_time);
+
+        if(qS_time < iS_time) printf("\n2. Hizli Siralama algoritmasi, %.8f saniye\n3. Ekleme Siralama algoritmasi, %.8f saniye", qS_time, iS_time);
+        else printf("\n2. Ekleme Siralama algoritmasi, %.8f saniye\n3. Hizli Siralama algoritmasi, %.8f saniye", iS_time, qS_time);
+    }
+    if(iS_time < qS_time && iS_time < mS_time){
+        printf("\n\n1. Ekleme Siralama algoritmasi, %.8f saniye", iS_time);
+
+        if(qS_time < mS_time) printf("\n2. Hizli Siralama algoritmasi, %.8f saniye\n3. Birlesim Siralama algoritmasi, %.8f saniye", qS_time, mS_time);
+        else printf("\n2. Birlesim Siralama algoritmasi, %.8f saniye\n3. Hizli Siralama algoritmasi, %.8f saniye", mS_time, qS_time);
+    }
 
     return 0;
 }
@@ -202,3 +241,23 @@ void birlesim(int dizi[], int sol, int orta, int sag){
 
 }
 // --------------------------------------- BIRLESTIRME SIRALAMA ALGORIMASI ---------------------------------------------
+
+
+// --------------------------------------- EKLEME SIRALAMA ALGORITMASI ---------------------------------------------
+void insertionSort(int dizi[], int boyut){
+
+    for(int i=0; i<boyut; ++i){     // Anahtar eleman ilk elemandan sonraki olarak secilecegi icin islem yapilmadan once i arttirilir
+        int anahtarEleman = dizi[i];
+        int kontrolEleman = i-1;
+
+        while(kontrolEleman >= 0 && dizi[kontrolEleman] > anahtarEleman){
+            dizi[kontrolEleman + 1] = dizi[kontrolEleman];
+            kontrolEleman--;
+        }
+        dizi[kontrolEleman + 1] = anahtarEleman;
+    
+    }
+
+
+
+}
