@@ -1,0 +1,149 @@
+// Ad:azize
+// Soyad:gümüş
+// Okul No:242503059
+// Sınıf:2
+// Öğrenim Türü (Örgün/İkinci Öğretim):birinci öğretim
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+#define SIZE 1000
+void randomdizi(int dizi[]);
+void calismaSuresi(void(*sortFunction) (int[], int), int arr[], int n, char *sortName );
+
+void insertionSort(int arr[], int n);
+void mergeSort(int arr[], int n);
+void quickSort(int arr[], int n);
+
+int main(){
+    int arr[SIZE];
+
+    randomdizi(arr);
+
+    calismaSuresi(insertionSort, arr, SIZE, "Insertion Sort");
+    calismaSuresi(mergeSort, arr, SIZE, "Merge Sort");
+    calismaSuresi(quickSort, arr, SIZE, "Quick Sort");
+
+    return 0;
+}
+
+
+void randomdizi(int dizi[]){
+    srand(time(NULL));
+
+    printf("1. random dizi: ", SIZE);
+    for (int i = 0; i < SIZE; i++)
+    {
+        dizi[i] = (rand() % 10000) +1;
+        printf("%d", dizi[i]);
+    }
+}
+
+void calismaSuresi(void(*sortFunction) (int[], int), int arr[], int n, char *sortisim){
+    clock_t basla, bitir;
+
+
+    int *temp = malloc(n * sizeof(int));
+    if (!temp) {
+        printf("Bellek hatasi\n");
+        return;
+    }
+    memcpy(temp, arr, n * sizeof(int));
+    double hesapSure = (double)(bitir - basla) / CLOCKS_PER_SEC;
+    clock_t basla = clock();
+    sortFunction(temp, n);
+    clock_t bitir = clock();
+
+    printf("%s: %f saniye", sortisim, hesapSure);
+
+    free(temp);
+}
+
+void insertionSort(int arr[], int n){
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = key;
+    }
+}
+
+//merge sort yardımcı fonksiyonları
+static void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+    int *L = malloc(n1 * sizeof(int));
+    int *R = malloc(n2 * sizeof(int));
+    if (!L || !R) { free(L); free(R); return; }
+
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+
+    free(L); free(R);
+}
+
+static void mergeSortRec(int arr[], int l, int r) {
+    if (l >= r) return;
+    int m = l + (r - l) / 2;
+    mergeSortRec(arr, l, m);
+    mergeSortRec(arr, m+1, r);
+    merge(arr, l, m, r);
+}
+
+void mergeSort(int arr[], int n){
+    mergeSortRec(arr, 0, n-1);
+}
+
+//quick sort yardımcı fonksiyonları
+static int partition(int arr[], int düsük, int yüksek) {
+    int pivot = arr[yüksek];
+    int i = düsük - 1;
+    for (int j = düsük; j < yüksek; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            int t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+        }
+    }
+    int t = arr[i+1]; arr[i+1] = arr[yüksek]; arr[yüksek] = t;
+    return i+1;
+}
+
+static void quicksortSüresi(int arr[], int düsük, int yüksek) {
+    if (düsük < yüksek) {
+        int pi = partition(arr, düsük, yüksek);
+        quicksortSüresi(arr, düsük, pi - 1);
+        quicksortSüresi(arr, pi + 1, yüksek);
+    }
+}
+
+void quickSort(int arr[], int n){
+    quicksortSüresi(arr, 0, n-1);
+}
+
+/*tartısma paragrafı
+-Bu program, rastgele oluşturulmuş 1000 elemanlık bir dizi üzerinde Insertion Sort,
+Merge Sort ve  quick Sort algoritmalarının çalışma sürelerini ölçerek performanslarını
+karşılaştırıyor. 
+-randomdizi() fonksiyonu diziye rastgele sayılar getiriyor .normalde, 
+Merge Sort ve Quick Sort'un ortalama ve en kötü durum
+zaman karmaşıklıkları O(n log n) iken, Insertion Sort'un en kötü durum karmaşıklığı n^2'dir. 
+-Bu nedenle, 1000 elemanlı bir dizi için insertion sort'un diğer iki algoritmaya göre belirgin
+şekilde daha yavaş çalışır.Ölçüm fonksiyonu calismaSuresi(), her sıralama algoritması için
+orijinal dizinin bir kopyasını oluşturup bu kopya üzerinde sıralama yaparak süreyi clock() ile
+hesaplıyor.
+-Genel olarak, bu program farklı sıralama algoritmalarının
+performans farklarını ve sürelerini anlamak için iyi bir temel sunuyor.
+*/
