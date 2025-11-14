@@ -1,4 +1,4 @@
-# Veri Yapıları Lab Uygulamaları
+# Data Structures📘
 
 Bu depo, **Veri Yapıları** dersi kapsamında 2025-2026 Güz dönemine ait yapılan uygulama örneklerini içermektedir.  
 Her dönem klasörü, o dönemde işlenen konulara ait kodları, ödevleri ve küçük denemeleri barındırır.
