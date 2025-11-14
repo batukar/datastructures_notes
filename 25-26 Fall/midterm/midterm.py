@@ -1,0 +1,1 @@
+print("Cevaplar sinav tarihinden sonra paylasilacaktir.")
